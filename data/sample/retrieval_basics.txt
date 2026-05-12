@@ -1,0 +1,25 @@
+Retrieval-Augmented Generation, commonly abbreviated RAG, is a paradigm in
+which a language model is conditioned on documents retrieved at inference
+time from an external knowledge source. The retrieval step gives the model
+access to information that may not be present in its training data and helps
+reduce hallucinations on knowledge-intensive tasks.
+
+A typical RAG pipeline has three stages: document ingestion, retrieval, and
+generation. During ingestion, source documents are split into chunks and
+indexed in a vector store or lexical index. During retrieval, the user query
+is encoded and used to fetch the most relevant chunks. During generation, the
+retrieved chunks are concatenated with the user query and supplied to a
+language model that produces the final answer.
+
+Dense retrieval uses neural embeddings to measure semantic similarity between
+queries and documents, so paraphrased queries can still match the right
+passages. Sparse retrieval, often based on BM25, scores documents by exact
+keyword overlap weighted by inverse document frequency. Hybrid retrievers
+combine the two signals, typically with a tunable interpolation weight, to
+benefit from both semantic recall and lexical precision.
+
+Multi-turn conversational RAG introduces additional challenges: user
+questions can contain pronouns, follow-up references, or implicit topic
+shifts. These context-dependent queries are commonly handled by a query
+rewriter that transforms them into standalone, retrieval-ready questions
+before they reach the retriever.
