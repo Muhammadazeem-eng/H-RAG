@@ -1,0 +1,20 @@
+Choosing a chunking strategy is one of the most consequential decisions in
+designing a retrieval pipeline. A chunk that is too small loses local
+context; a chunk that is too large dilutes relevance signals and inflates
+generator input.
+
+Fixed-token chunking splits documents on a token budget regardless of
+sentence boundaries. It is simple but can fragment ideas mid-clause.
+Sentence-window chunking groups N consecutive sentences with a stride S,
+creating overlapping chunks that preserve sentence-level coherence while
+still being short enough for precise retrieval.
+
+Hierarchical or parent-child chunking takes this further by indexing only
+the small child chunks but tracking which parent document each chunk
+belongs to. At query time the retriever scores child chunks, but the
+generator receives the parent. This pattern - retrieve small, generate
+large - has become a standard for long-document RAG.
+
+H-RAG follows the parent-child design with overlapping three-sentence
+windows and a stride of two. The choice is unsupervised: no learned chunker
+is required, only a sentence splitter and a sliding-window iterator.

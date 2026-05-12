@@ -1,0 +1,19 @@
+The MTRAGEval framework evaluates multi-turn conversational RAG along two
+axes: retrieval quality and end-to-end generation quality.
+
+Retrieval is scored using nDCG@k and Recall@k over the ranked list of
+documents returned by the system. These metrics reward both relevance and
+position - moving a relevant document up the ranked list increases nDCG
+even when Recall stays constant.
+
+End-to-end generation is scored using a harmonic mean over three signals:
+RB_agg measures document-level grounding (did the answer rely on the
+retrieved evidence?), RL_F measures faithfulness (does the answer assert
+things the evidence supports?), and RB_llm is an LLM-as-judge answer
+quality score.
+
+On its final submission, H-RAG achieved nDCG@5 = 0.4271 on Task A and a
+harmonic mean of 0.3241 on Task C, with component scores RB_agg = 0.2488,
+RL_F = 0.2703, and RB_llm = 0.6508. The relatively high RB_llm score
+indicates fluent answers, while the lower grounding scores point to
+evidence selection - not fluency - as the dominant bottleneck.

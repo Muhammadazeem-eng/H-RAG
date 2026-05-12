@@ -1,0 +1,30 @@
+H-RAG is a hierarchical parent-child retrieval system designed for multi-turn
+Retrieval-Augmented Generation conversations. It was submitted to SemEval-2026
+Task 8 (MTRAGEval), participating in both Task A (Retrieval) and Task C
+(Generation with Retrieved Passages).
+
+The system decouples retrieval granularity from generation context. Documents
+are segmented into overlapping sentence-based child chunks during ingestion,
+while the original full documents are preserved as parent units. Retrieval is
+performed over the fine-grained child chunks, but generation operates on the
+larger parent documents so the language model receives coherent context.
+
+Child chunks are built with a sliding window over consecutive sentences. The
+submitted configuration uses three sentences per chunk with a stride of two,
+producing overlapping windows that preserve local coherence while remaining
+compact for retrieval. Each child chunk is embedded using BAAI/bge-large-en-v1.5
+and indexed in a vector database.
+
+At query time, an API orchestrator pulls recent conversation history from a
+session store. A lightweight LLM-based query rewriter reformulates
+context-dependent turns into standalone questions, and the rewritten query is
+sent to a hybrid dense-sparse retriever. The hybrid weight alpha balances
+semantic similarity against keyword matching; the paper's best configuration
+uses alpha = 0.7.
+
+Retrieved child chunks are rescored using cosine similarity between query and
+chunk embeddings produced by BAAI/bge-reranker-v2-m3. Crucially, this rescoring
+uses the reranker's embedding output rather than cross-encoder logits, which
+enables efficient large-scale retrieval. Child scores are then aggregated to
+their parent documents via maximum-score assignment, and the top-n parents are
+passed to an instruction-tuned language model for response generation.

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / config
+
+# IDE / tooling
+.claude/
+
+# Local data + runtime artifacts
+.hrag_store/
+.hrag_run.log
+*.log
+.pytest_cache/
+.DS_Store
+config.bat
+node_modules
